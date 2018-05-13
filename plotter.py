@@ -36,5 +36,41 @@ def main():
                 fontsize=10)
     plt.savefig('fgsm_squeezed.png', dpi=288)
 
+def main2():
+    median, perc5, perc95 = read_data('cosine_cw2ll.csv')
+    makeplot(plt, median, perc5, perc95, 
+            label='Adversarial Samples', mark='-', color='r')
+    
+    median, perc5, perc95 = read_data('cosine_norm.csv')
+    makeplot(plt, median, perc5, perc95, 
+            label='Normal Samples', mark='-', color='b')
+
+    plt.legend(loc='upper left')
+    axes = plt.gca()
+    axes.set_xlim(0)
+    axes.set_ylim(0,1)
+    plt.xlabel('Layer #')
+    plt.ylabel('Cosine distance between squeezed and non-squeezed',
+                fontsize=10)
+    plt.savefig('cw2ll_squeezed.png', dpi=288)
+
+def main3():
+    median, perc5, perc95 = read_data('cifar_layer_dist_adv.csv')
+    makeplot(plt, median, perc5, perc95, 
+            label='Adversarial Samples', mark='-', color='r')
+    
+    median, perc5, perc95 = read_data('cifar_layer_dist_rand.csv')
+    makeplot(plt, median, perc5, perc95, 
+            label='Randomly perturbed Samples', mark='-', color='b')
+
+    plt.legend(loc='upper left')
+    axes = plt.gca()
+    axes.set_xlim(0)
+    axes.set_ylim(0,1)
+    plt.xlabel('Layer #')
+    plt.ylabel('Cosine distance between original and perturbed',
+                fontsize=10)
+    plt.savefig('adv_rand.png', dpi=288)
+
 if __name__ == '__main__':
     main()
