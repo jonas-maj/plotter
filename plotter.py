@@ -2,6 +2,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 
+DPI = 600
+NUM_LAYERS = 31
+
 def read_data(fname):
     data = list(csv.reader(open(fname)))
     data = data[1:]  # ignore header
@@ -13,12 +16,14 @@ def read_data(fname):
     return median, perc5, perc95
 
 def makeplot(plt, median, perc5, perc95, label=None, mark='-', color=None):
+    plt.rc('font',family='DejaVu Sans')
+    #plt.axes.Axes.set_aspect(16/9)
     x = range(len(median))
     
     plt.plot(x, median, mark, label=label, c=color)
     plt.fill_between(x, perc5, perc95, facecolor=color, alpha=0.1)
 
-def main():
+def cosine_fgsm():
     median, perc5, perc95 = read_data('cosine_fgsm.csv')
     makeplot(plt, median, perc5, perc95, 
             label='Adversarial Samples', mark='-', color='r')
@@ -27,16 +32,16 @@ def main():
     makeplot(plt, median, perc5, perc95, 
             label='Normal Samples', mark='-', color='b')
 
-    plt.legend(loc='upper left')
+    # plt.legend(loc='upper left') - No legend
     axes = plt.gca()
-    axes.set_xlim(0)
-    axes.set_ylim(0,1)
-    plt.xlabel('Layer #')
-    plt.ylabel('Cosine distance between squeezed and non-squeezed',
+    axes.set_xlim(0, NUM_LAYERS)
+    axes.set_ylim(0, 1)
+    plt.xlabel('Activation Layer')
+    plt.ylabel('Cosine Distance', # between squeezed and non-squeezed',
                 fontsize=10)
-    plt.savefig('fgsm_squeezed.png', dpi=288)
+    plt.savefig('fgsm_squeezed.png', dpi=DPI)
 
-def main2():
+def cosine_cw2ll():
     median, perc5, perc95 = read_data('cosine_cw2ll.csv')
     makeplot(plt, median, perc5, perc95, 
             label='Adversarial Samples', mark='-', color='r')
@@ -45,16 +50,17 @@ def main2():
     makeplot(plt, median, perc5, perc95, 
             label='Normal Samples', mark='-', color='b')
 
-    plt.legend(loc='upper left')
+    # plt.legend(loc='upper left')
     axes = plt.gca()
     axes.set_xlim(0)
     axes.set_ylim(0,1)
-    plt.xlabel('Layer #')
-    plt.ylabel('Cosine distance between squeezed and non-squeezed',
+    axes.set_xlim(0, NUM_LAYERS)
+    plt.xlabel('Activation Layer')
+    plt.ylabel('Cosine Distance', # between squeezed and non-squeezed',
                 fontsize=10)
-    plt.savefig('cw2ll_squeezed.png', dpi=288)
+    plt.savefig('cw2ll_squeezed.png', dpi=DPI)
 
-def main3():
+def cifar_layer():
     median, perc5, perc95 = read_data('cifar_layer_dist_adv.csv')
     makeplot(plt, median, perc5, perc95, 
             label='Adversarial Samples', mark='-', color='r')
@@ -63,14 +69,19 @@ def main3():
     makeplot(plt, median, perc5, perc95, 
             label='Randomly perturbed Samples', mark='-', color='b')
 
-    plt.legend(loc='upper left')
+    # plt.legend(loc='upper left')
     axes = plt.gca()
     axes.set_xlim(0)
     axes.set_ylim(0,1)
-    plt.xlabel('Layer #')
-    plt.ylabel('Cosine distance between original and perturbed',
+    axes.set_xlim(0, NUM_LAYERS)
+    plt.xlabel('Activation Layer')
+    plt.ylabel('Cosine Distance', # between original and perturbed',
                 fontsize=10)
-    plt.savefig('adv_rand.png', dpi=288)
+    plt.savefig('adv_rand.png', dpi=DPI)
 
 if __name__ == '__main__':
-    main()
+    cosine_fgsm()
+    plt.clf()
+    cosine_cw2ll()
+    plt.clf()
+    cifar_layer()
