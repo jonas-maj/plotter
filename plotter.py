@@ -67,12 +67,12 @@ def cosine_cw2ll():
     plt.savefig('cw2ll_squeezed.png', dpi=DPI)
 
 def cifar_layer():
-    median, perc5, perc95 = read_data('cifar_layer_dist_adv.csv')
+    median, perc5, perc95 = read_data('cifar_layer_dist_cwinfll.csv')
     fig = pre_plot(plt)
     makeplot(fig, median, perc5, perc95, 
             label='Adversarial Samples', mark='-', color='r')
     
-    median, perc5, perc95 = read_data('cifar_layer_dist_rand.csv')
+    median, perc5, perc95 = read_data('cifar_layer_dist_rand_cwinfll.csv')
     makeplot(plt, median, perc5, perc95, 
             label='Randomly perturbed Samples', mark='-', color='b')
 
@@ -81,7 +81,7 @@ def cifar_layer():
     plt.savefig('adv_rand.png', dpi=DPI)
 
 def adv_layer():
-    median, perc5, perc95 = read_data('cifar_layer_dist_adv.csv')
+    median, perc5, perc95 = read_data('cifar_layer_dist_cwinfll.csv')
     fig = pre_plot(plt)
     makeplot(fig, median, perc5, perc95, 
             label='Adversarial Samples', mark='-', color='r')
