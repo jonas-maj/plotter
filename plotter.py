@@ -38,19 +38,21 @@ def setup_plot(plt, xlabel, ylabel):
     plt.xlabel(xlabel, fontsize=14, labelpad = 10)
     plt.ylabel(ylabel, fontsize=14, labelpad = 10)
 
-def cosine_fgsm():
-    median, perc5, perc95 = read_data('cosine_fgsm.csv')
+def compare_two(reddata, bluedata, outputfile):
     fig = pre_plot(plt)
-    makeplot(fig, median, perc5, perc95, 
-            label='Adversarial Samples', mark='-', color='r')
-    
-    median, perc5, perc95 = read_data('cosine_norm.csv')
 
-    makeplot(fig, median, perc5, perc95, 
-             label='Normal Samples', mark='-', color='b')
+    if reddata:
+        median, perc5, perc95 = read_data(reddata)
+        makeplot(fig, median, perc5, perc95, 
+                 label='Adversarial Samples', mark='-', color='r')
+    if bluedata:
+        median, perc5, perc95 = read_data(bluedata)
+        makeplot(fig, median, perc5, perc95, 
+                 label='Normal Samples', mark='-', color='b')
 
     setup_plot(plt, 'Activation Layer', 'Cosine Distance')
-    plt.savefig('fgsm_squeezed.png', dpi=DPI)
+    plt.savefig(outputfile, dpi=DPI)
+    plt.clf()
 
 def cosine_cw2ll():
     median, perc5, perc95 = read_data('cosine_cw2ll.csv')
@@ -78,7 +80,7 @@ def cifar_layer():
 
     # plt.legend(loc='upper left')
     setup_plot(plt, 'Activation Layer', 'Cosine Distance')
-    plt.savefig('adv_rand.png', dpi=DPI)
+    plt.savefig('cifar_layer.png', dpi=DPI)
 
 def adv_layer():
     median, perc5, perc95 = read_data('cifar_layer_dist_cwinfll.csv')
@@ -98,10 +100,7 @@ if __name__ == '__main__':
     # plt.rc('font',family='DejaVu Sans')
     # plt.rc('font',family='Fira Sans')
     plt.rc('font', family = 'Trebuchet MS')
-    adv_layer()
-    plt.clf()
-    cosine_fgsm()
-    plt.clf()
-    cosine_cw2ll()
-    plt.clf()
-    cifar_layer()
+    compare_two('cosine_fgsm.csv', 'cosine_norm.csv', 'fgsm_norm.png')
+    compare_two(None, 'cifar_layer_dist_rand_0.0245.csv', 'rand_0.0245.png')
+    compare_two('cifar_layer_dist_fgsm_0.0245.csv', 'cifar_layer_dist_rand_0.0245.csv', 'fgsm_rand_0.0245.png')
+
